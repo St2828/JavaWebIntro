@@ -11,7 +11,7 @@ CREATE TABLE ldap_user_attributes      --// сущность для хранен
 
 CREATE TABLE ldap_auth                            --// сущность для хранения ldap-серверов
 (
-  id BIGINT AUTO_INCREMENT NOT NULL,                          --// суникальный идентификатор
+  id BIGINT AUTO_INCREMENT NOT NULL,              --// суникальный идентификатор
   date_open TIMESTAMP NOT NULL,                   --// дата создания
   address CHARACTER VARYING NOT NULL,             --// url ldap-сервера
   port CHARACTER VARYING NOT NULL,                --// порт ldap-сервера
@@ -70,3 +70,27 @@ CREATE TABLE permissions                            --// сущность для
   PRIMARY KEY (id)
 );
 
+CREATE TABLE residence
+(
+  id                  BIGINT AUTO_INCREMENT NOT NULL,         -- // уникальный идентификатор
+  street              CHARACTER VARYING NOT NULL,            -- // улица
+  adress              CHARACTER VARYING NOT NULL,            -- // номер дома
+  flat                CHARACTER VARYING,                     -- // номер квартиры
+  zip                 CHARACTER VARYING,                     -- // индекс
+  id_users            BIGINT,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_users) REFERENCES users (id)
+);
+
+CREATE TABLE occupants
+(
+  id                  BIGINT AUTO_INCREMENT NOT NULL,         -- // уникальный идентификатор
+  surname             CHARACTER VARYING NOT NULL,            -- // фамилия
+  name                CHARACTER VARYING NOT NULL,            -- // имя
+  second_name         CHARACTER VARYING,                     -- // отчество
+  profession          CHARACTER VARYING,                     -- // профессия
+  age                 INT,                                -- // возраст
+  id_residence        BIGINT,
+  PRIMARY KEY (id),
+  FOREIGN KEY (id_residence) REFERENCES residence (id)
+);
