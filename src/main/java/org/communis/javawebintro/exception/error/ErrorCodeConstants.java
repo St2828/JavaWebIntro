@@ -46,6 +46,9 @@ public class ErrorCodeConstants {
 
     public static final ErrorCodeIdentifier USER_LDAP_EXIST_BD = USER.branch("8");
 
+    public static final ErrorCodeIdentifier RESIDENCE = new ErrorCodeIdentifier("3");
+    public static final ErrorCodeIdentifier RESIDENCE_LIST_ERROR = RESIDENCE.branch("1");
+
     static {
         messages.put(DATA_NOT_FOUND, "Ошибка при получении реестра ldap-серверов");
         messages.put(ACCESS_ERROR, "Доступ запрещен");
@@ -82,5 +85,7 @@ public class ErrorCodeConstants {
 
         messages.put(USER_LDAP_EXIST_BD, "Невозможно добавить пользователя из ldap, " +
                 "так как в БД уже сущесвует пользователь с другим типом авторизации");
+
+         messages.put(RESIDENCE_LIST_ERROR, "Ошибка при получении реестра пользователей");
     }
 }

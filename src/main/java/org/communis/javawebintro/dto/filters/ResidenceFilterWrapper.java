@@ -1,13 +1,11 @@
 package org.communis.javawebintro.dto.filters;
 
-public class ResidenceFilterWrapper {
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-    private String zip;
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class ResidenceFilterWrapper extends ObjectFilter{
 
-    public String getZip() {
-        return zip;
-    }
-
-    public void setZip(String zip) { this.zip = zip; }
-
+    private Long user;
 }
