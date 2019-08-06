@@ -86,6 +86,6 @@ public class ErrorCodeConstants {
         messages.put(USER_LDAP_EXIST_BD, "Невозможно добавить пользователя из ldap, " +
                 "так как в БД уже сущесвует пользователь с другим типом авторизации");
 
-         messages.put(RESIDENCE_LIST_ERROR, "Ошибка при получении реестра пользователей");
+        messages.put(RESIDENCE_LIST_ERROR, "Ошибка при получении реестра жилищ");
     }
 }
