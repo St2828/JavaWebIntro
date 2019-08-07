@@ -48,6 +48,18 @@ public class ErrorCodeConstants {
 
     public static final ErrorCodeIdentifier RESIDENCE = new ErrorCodeIdentifier("3");
     public static final ErrorCodeIdentifier RESIDENCE_LIST_ERROR = RESIDENCE.branch("1");
+    public static final ErrorCodeIdentifier RESIDENCE_ADD_ERROR = RESIDENCE.branch("2");
+    public static final ErrorCodeIdentifier RESIDENCE_UPDATE_ERROR = RESIDENCE.branch("3");
+    public static final ErrorCodeIdentifier RESIDENCE_DELETE_ERROR = RESIDENCE.branch("4");
+    public static final ErrorCodeIdentifier RESIDENCE_INFO_ERROR = RESIDENCE.branch("5");
+
+    public static final ErrorCodeIdentifier OCCUPANTS = new ErrorCodeIdentifier("4");
+    public static final ErrorCodeIdentifier OCCUPANTS_LIST_ERROR = OCCUPANTS.branch("1");
+    public static final ErrorCodeIdentifier OCCUPANTS_ADD_ERROR = OCCUPANTS.branch("2");
+    public static final ErrorCodeIdentifier OCCUPANTS_UPDATE_ERROR = OCCUPANTS.branch("3");
+    public static final ErrorCodeIdentifier OCCUPANTS_DELETE_ERROR = OCCUPANTS.branch("4");
+    public static final ErrorCodeIdentifier OCCUPANTS_INFO_ERROR = OCCUPANTS.branch("5");
+
 
     static {
         messages.put(DATA_NOT_FOUND, "Ошибка при получении реестра ldap-серверов");
@@ -87,5 +99,15 @@ public class ErrorCodeConstants {
                 "так как в БД уже сущесвует пользователь с другим типом авторизации");
 
         messages.put(RESIDENCE_LIST_ERROR, "Ошибка при получении реестра жилищ");
+        messages.put(RESIDENCE_ADD_ERROR, "Ошибка при добавлении жилища");
+        messages.put(RESIDENCE_UPDATE_ERROR, "Ошибка при изменении жилища");
+        messages.put(RESIDENCE_DELETE_ERROR, "Ошибка при удалении жилища");
+        messages.put(RESIDENCE_INFO_ERROR, "Ошибка при получении жилища");
+
+        messages.put(OCCUPANTS_LIST_ERROR, "Ошибка при получении реестра жителей");
+        messages.put(OCCUPANTS_ADD_ERROR, "Ошибка при добавлении жителя");
+        messages.put(OCCUPANTS_UPDATE_ERROR, "Ошибка при изменении жителя");
+        messages.put(OCCUPANTS_DELETE_ERROR, "Ошибка при удалении жителя");
+        messages.put(OCCUPANTS_INFO_ERROR, "Ошибка при получении жителя");
     }
 }
