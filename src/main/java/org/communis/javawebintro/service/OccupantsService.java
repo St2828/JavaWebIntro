@@ -27,7 +27,8 @@ public class OccupantsService {
 
     @Autowired
     public OccupantsService(OccupantsRepository occupantsRepository){
-        this.occupantsRepository = occupantsRepository;}
+        this.occupantsRepository = occupantsRepository;
+    }
 
 
     /**
@@ -35,7 +36,7 @@ public class OccupantsService {
      * @return список экземпляров класса OccupantsWrapper
      * @throws ServerException генерирует исключение
      */
-    public List<OccupantsWrapper> getAllResidence() throws ServerException{
+    public List<OccupantsWrapper> getAllOccupants() throws ServerException{
         try {
             return occupantsRepository.findAll().stream().map(OccupantsWrapper::new).collect(Collectors.toList());
         } catch (Exception ex) {
@@ -64,43 +65,44 @@ public class OccupantsService {
      * @return true - при успешном добавлении
      * @throws ServerException генерирует исключение
      */
-    public String addOccupants(OccupantsWrapper occupantsWrapper) throws ServerException{
+    public OccupantsWrapper addOccupants(OccupantsWrapper occupantsWrapper) throws ServerException{
         try{
             Occupants occupants = new Occupants();
             occupantsWrapper.fromWrapper(occupants);
-            occupantsRepository.save(occupants);
-            return "true";
+            return new OccupantsWrapper(occupantsRepository.save(occupants));
         }catch (Exception ex){
             throw new ServerException(ErrorInformationBuilder.build(ErrorCodeConstants.OCCUPANTS_ADD_ERROR), ex);
         }
     }
 
-    /**
-     * Получает информацию о жилище по идентификатору из базы
-     *
-     * @param id идентификатор жителе
-     * @return информация о жителе
-     */
-    public OccupantsWrapper getForEdit(Long id) throws ServerException {
-        try {
-            return new OccupantsWrapper(occupantsRepository.findOne(id));
-        } catch (Exception ex) {
-            throw new ServerException(ErrorInformationBuilder.build(ErrorCodeConstants.OCCUPANTS_INFO_ERROR), ex);
-        }
-    }
 
     /**
      * Метод удаления существующего жителя из базы данных
-     * @param occupantsWrapper содержит идентификатор удаляемой записи
-     * @return true - при успешном удалении
      * @throws ServerException генерирует исключение
      */
-    public String deleteOccupants(OccupantsWrapper occupantsWrapper) throws ServerException{
+    public void deleteOccupants(Long id) throws ServerException{
         try{
-            occupantsRepository.delete(occupantsWrapper.getId());
-            return "true";
+            Occupants occupants = getOccupants(id);
+            occupantsRepository.delete(occupants);
         }catch (Exception ex){
-            throw new ServerException(ErrorInformationBuilder.build(ErrorCodeConstants.OCCUPANTS_DELETE_ERROR), ex);
+            throw new ServerException(ErrorInformationBuilder.build(ErrorCodeConstants.RESIDENCE_DELETE_ERROR), ex);
+        }
+    }
+
+
+    /**
+     * Получает информацию о жителе с заданным идентификатором из базы и пребразует ее в объект класса {@link OccupantsWrapper}
+     *
+     * @param id идентификатор жителя
+     * @return объект, содержащий информацию о жителе
+     */
+    public OccupantsWrapper getById(Long id) throws ServerException {
+        try {
+            return new OccupantsWrapper(getOccupants(id));
+        } catch (ServerException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            throw new ServerException(ErrorInformationBuilder.build(ErrorCodeConstants.USER_INFO_ERROR), ex);
         }
     }
 
@@ -110,12 +112,11 @@ public class OccupantsService {
      * @return true - при успешном обновлении данных
      * @throws ServerException генерирует исключение
      */
-    public String editOccupants(OccupantsWrapper occupantsWrapper) throws ServerException{
+    public OccupantsWrapper editOccupants(OccupantsWrapper occupantsWrapper) throws ServerException{
         try{
             Occupants occupants = getOccupants(occupantsWrapper.getId());
             occupantsWrapper.fromWrapper(occupants);
-            occupantsRepository.save(occupants);
-            return "true";
+            return new OccupantsWrapper(occupantsRepository.save(occupants));
         }catch (Exception ex){
             throw new ServerException(ErrorInformationBuilder.build(ErrorCodeConstants.OCCUPANTS_UPDATE_ERROR), ex);
         }

@@ -3,6 +3,8 @@ package org.communis.javawebintro.service;
 import org.communis.javawebintro.dto.filters.ResidenceFilterWrapper;
 import org.communis.javawebintro.exception.ServerException;
 import org.communis.javawebintro.repository.ResidenceRepository;
+import org.communis.javawebintro.repository.UserRepository;
+import org.communis.javawebintro.entity.User;
 import org.communis.javawebintro.entity.Residence;
 import org.communis.javawebintro.repository.specifications.ResidenceSpecification;
 import org.communis.javawebintro.dto.ResidenceWrapper;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,10 +26,13 @@ import java.util.stream.Collectors;
 public class ResidenceService {
 
     private final ResidenceRepository residenceRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ResidenceService(ResidenceRepository residenceRepository){
-        this.residenceRepository = residenceRepository;}
+    public ResidenceService(ResidenceRepository residenceRepository, UserRepository userRepository){
+        this.residenceRepository = residenceRepository;
+        this.userRepository = userRepository;
+       }
 
 
     /**
@@ -58,22 +64,32 @@ public class ResidenceService {
         }
     }
 
+
     /**
      * Метод добавления нового жилища в базу данных
      * @param residenceWrapper содержит данные жилища
      * @return true - при успешном добавлении
      * @throws ServerException генерирует исключение
      */
-    public String addResidence(ResidenceWrapper residenceWrapper) throws ServerException{
+    public ResidenceWrapper addResidence(ResidenceWrapper residenceWrapper) throws ServerException{
         try{
                 Residence residence = new Residence();
                 residenceWrapper.fromWrapper(residence);
-                residenceRepository.save(residence);
-                return "true";
+                return new ResidenceWrapper(residenceRepository.save(residence));
+
+
+            /*   if (residenceWrapper.getUser()!=null){
+             *   Optional<User> user = userRepository.findOne(residenceWrapper.getUser().getId());
+             *      user.ifPresent(residence::setUser);
+             *    }
+             */
+
+
         }catch (Exception ex){
             throw new ServerException(ErrorInformationBuilder.build(ErrorCodeConstants.RESIDENCE_ADD_ERROR), ex);
         }
     }
+
 
     /**
      * Метод обновления данных существующего жилища
@@ -81,12 +97,11 @@ public class ResidenceService {
      * @return true - при успешном обновлении данных
      * @throws ServerException генерирует исключение
      */
-    public String editResidence(ResidenceWrapper residenceWrapper) throws ServerException{
+    public ResidenceWrapper editResidence(ResidenceWrapper residenceWrapper) throws ServerException{
         try{
             Residence residence = getResidence(residenceWrapper.getId());
             residenceWrapper.fromWrapper(residence);
-            residenceRepository.save(residence);
-            return "true";
+            return new ResidenceWrapper(residenceRepository.save(residence));
         }catch (Exception ex){
             throw new ServerException(ErrorInformationBuilder.build(ErrorCodeConstants.RESIDENCE_UPDATE_ERROR), ex);
         }
@@ -94,33 +109,33 @@ public class ResidenceService {
 
     /**
      * Метод удаления существующего жилища из базы данных
-     * @param residenceWrapper содержит идентификатор удаляемой записи
-     * @return true - при успешном удалении
      * @throws ServerException генерирует исключение
      */
-    public String deleteResidence(ResidenceWrapper residenceWrapper) throws ServerException{
+
+    public void deleteResidence(Long id) throws ServerException{
         try{
-            residenceRepository.delete(residenceWrapper.getId());
-            return "true";
+            Residence residence = getResidence(id);
+            residenceRepository.delete(residence);
         }catch (Exception ex){
             throw new ServerException(ErrorInformationBuilder.build(ErrorCodeConstants.RESIDENCE_DELETE_ERROR), ex);
         }
     }
 
     /**
-     * Получает информацию о жилище по идентификатору из базы
+     * Получает информацию о жилище с заданным идентификатором из базы и пребразует ее в объект класса {@link ResidenceWrapper}
      *
      * @param id идентификатор жилища
-     * @return информация о жилище
+     * @return объект, содержащий информацию о жилище
      */
-    public ResidenceWrapper getForEdit(Long id) throws ServerException {
+    public ResidenceWrapper getById(Long id) throws ServerException {
         try {
-            return new ResidenceWrapper(residenceRepository.findOne(id));
+            return new ResidenceWrapper(getResidence(id));
+        } catch (ServerException ex) {
+            throw ex;
         } catch (Exception ex) {
-            throw new ServerException(ErrorInformationBuilder.build(ErrorCodeConstants.RESIDENCE_INFO_ERROR), ex);
+            throw new ServerException(ErrorInformationBuilder.build(ErrorCodeConstants.USER_INFO_ERROR), ex);
         }
     }
-
 
 
     private Residence getResidence(Long id) throws ServerException {

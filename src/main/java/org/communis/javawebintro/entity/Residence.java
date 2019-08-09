@@ -3,7 +3,6 @@ package org.communis.javawebintro.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Optional;
 
 @Data
 @Entity
